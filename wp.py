@@ -40,8 +40,6 @@ class file_make:
 			elif (choice == str(5)):
 				system('clear')
 				file_make.show_files_edit(1)  # Edit a file
-				file_make.show_files_edit(1)
-
 
 			elif (choice == str("q")):
 				print("Happy day...")
@@ -125,7 +123,6 @@ class file_make:
 			for index, filename in files_to_edit.items():
 				if (int(choice) == index):
 					file_make.view_file(filename)
-					file_make.edit_file(filename, 1)
 		else:
 			print("Available files:\n")
 			files_to_edit = file_make.show_files()
@@ -152,13 +149,11 @@ class file_make:
 			file = open(filename, "r")
 			system('clear')
 			file_make.add_content(file, filename, 1)
-			file.close()
 		elif (answer == 'n'):
 			file_make.chooser()
 		else:
 			print("Please enter either (y/n)")
 			file_make.edit_file(filename, 1)
-
 		file.close()
 		return file
 
@@ -167,37 +162,46 @@ class file_make:
 		file = open(filename, "r")
 		system('clear')
 		print(file.read(), "\n\n")
-		file_make.view_timer(filename)
 		file.close()
+		file_make.view_timer(filename)
 		
 	def view_timer(filename):
 		print("Done viewing?")
 		choice = input()
 		if (choice == 'y'):
-			pass
+			return
 		elif (choice == 'n'):
-			sleep(4)
+			sleep(2)
 			file_make.view_file(filename)
 		else:
 			print("Enter either (y/n)")
-			file_make.view_timer()
+			file_make.view_timer(filename)
 	
 	def add_content(file, filename, flag):
 
 		if (not flag):
 			print("Editing "+filename+" ...\n")
-			while (1):
-				content = input()
-				file.write(content + "\n")
 		else:
 			print("Editing "+filename+" ...\n")
 			print(file.read(), end='')
 			file.close()
 			file = open(filename, "a+")
-			while (1):
-				content = input()
+		while (1):
+			content = input()
+			if (content == ":save:"):
+				print("\nsaving...")
+				sleep(.2)
+				file.close()
+				file_make.chooser()
+				break
+			elif (content == ":save+view:"):
+				print("\nsaving and viewing...")
+				sleep(.2)
+				file.close()
+				file_make.view_file(filename)
+				break
+			else:
 				file.write(content + "\n")
-
 
 	def create_new_file():
 		
@@ -221,7 +225,6 @@ class file_make:
 
 		print(datetime.datetime.now(), "\n")
 		file_make.add_content(file, filename, 0)
-		file.close()
 
 		print("\nFile: '", filename, "' created.")
 		sleep(1)
