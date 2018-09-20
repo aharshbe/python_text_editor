@@ -25,20 +25,24 @@ class file_make:
 			choice = input()
 
 			if (choice == str(1)):
-				file_make.create_new_file()
+				file_make.create_new_file() # Create new file
 			elif (choice == str(2)):
 				system('clear')
-				file_make.show_files_edit()
-				sleep(2)
+				file_make.show_files_edit(0) # View files
+				sleep(.3)
 			elif (choice == str(3)):
 				system('clear')
-				file_make.delete_file()
+				file_make.delete_file() # Delete a file
 				sleep(2)
 			elif (choice == str(4)):
-				print("\nRenameing a file...")
+				print("\nRe-naming a file...") # Raname a file
 				sleep(2)
 			elif (choice == str(5)):
-				file_make.show_files_edit()
+				system('clear')
+				file_make.show_files_edit(1)  # Edit a file
+				file_make.show_files_edit(1)
+
+
 			elif (choice == str("q")):
 				print("Happy day...")
 				sleep(.3)
@@ -105,38 +109,57 @@ class file_make:
 			print("Please enter either (y/n)")
 			file_make.create_new_question()
 
-	def show_files_edit():
-		system('clear')
-		print("Available files:\n")
-		
-		files_to_edit = file_make.show_files()
-		if (files_to_edit) == 1:
-			file_make.create_new_question()
-		else:
-			choice = input("\nPick a file number: ")
-		
-		for index, filename in files_to_edit.items():
-			if (int(choice) == index):
-				file_make.view_file(filename)
-				file_make.edit_file(filename)
-		file_make.show_files_edit()
+	def show_files_edit(flag):
 
-	def edit_file(filename):
+		if (not flag):
+			print("Available files:\n")
+			files_to_edit = file_make.show_files()
+			
+			if (files_to_edit == 1):
+				system('clear')
+				print("\n No files in current directory.\n")
+				file_make.create_new_question()
+			else:
+				choice = input("\nPick a file number: ")
+			
+			for index, filename in files_to_edit.items():
+				if (int(choice) == index):
+					file_make.view_file(filename)
+					file_make.edit_file(filename, 1)
+		else:
+			print("Available files:\n")
+			files_to_edit = file_make.show_files()
+			
+			if (files_to_edit == 1):
+				system('clear')
+				print("\n No files in current directory.\n")
+				file_make.create_new_question()
+			else:
+				choice = input("\nPick a file number: ")
+			
+			for index, filename in files_to_edit.items():
+				if (int(choice) == index):
+					file_make.edit_file(filename, 0)
+
+	def edit_file(filename, flag):
 		system('clear')
-		answer = input("Want to edit file? ")
+		if (flag):
+			answer = input("Want to edit file? ")
+		else:
+			answer = 'y'
+
 		if (answer == 'y'):
 			file = open(filename, "r")
 			system('clear')
-			print(file.read(), end='')
-			file.close()
-			file = open(filename, "a+")
-			file_make.add_content(file, filename)
+			file_make.add_content(file, filename, 1)
 			file.close()
 		elif (answer == 'n'):
 			file_make.chooser()
 		else:
 			print("Please enter either (y/n)")
-			file_make.edit_file()
+			file_make.edit_file(filename, 1)
+
+		file.close()
 		return file
 
 	def view_file(filename):
@@ -144,10 +167,10 @@ class file_make:
 		file = open(filename, "r")
 		system('clear')
 		print(file.read(), "\n\n")
-		file_make.view_timer()
+		file_make.view_timer(filename)
 		file.close()
 		
-	def view_timer():
+	def view_timer(filename):
 		print("Done viewing?")
 		choice = input()
 		if (choice == 'y'):
@@ -159,14 +182,22 @@ class file_make:
 			print("Enter either (y/n)")
 			file_make.view_timer()
 	
-	def add_content(file, filename):
-		print(datetime.datetime.now(), "\n")
-		file.write(str(datetime.datetime.now())+"\n\n")
+	def add_content(file, filename, flag):
 
-		print("Editing "+filename+" ...\n")
-		while (1):
-			content = input()
-			file.write(content + "\n")
+		if (not flag):
+			print("Editing "+filename+" ...\n")
+			while (1):
+				content = input()
+				file.write(content + "\n")
+		else:
+			print("Editing "+filename+" ...\n")
+			print(file.read(), end='')
+			file.close()
+			file = open(filename, "a+")
+			while (1):
+				content = input()
+				file.write(content + "\n")
+
 
 	def create_new_file():
 		
@@ -181,13 +212,15 @@ class file_make:
 		if (not my_file.is_file()):
 			print("Creating new file...\n")
 			file = open(filename, "w+")
+			file.write(str(datetime.datetime.now())+"\n\n")
 			sleep(1)
 			system('clear')
 		else:
 			file_make.view_file(filename)
-			file = file_make.edit_file(filename)
+			file = file_make.edit_file(filename, 1)
 
-		file_make.add_content(file, filename)
+		print(datetime.datetime.now(), "\n")
+		file_make.add_content(file, filename, 0)
 		file.close()
 
 		print("\nFile: '", filename, "' created.")
