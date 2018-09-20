@@ -4,6 +4,7 @@ import os
 from os import system
 from time import sleep
 from pathlib import Path
+import datetime
 
 class file_make:
 	def __init__(self):
@@ -31,9 +32,7 @@ class file_make:
 				sleep(2)
 			elif (choice == str(3)):
 				system('clear')
-				file_make.show_files()
-				filename = input("\nEnter file to delete: ")
-				file_make.delete_file(filename)
+				file_make.delete_file()
 				sleep(2)
 			elif (choice == str(4)):
 				print("\nRenameing a file...")
@@ -49,18 +48,35 @@ class file_make:
 				print("Choose an option above.")
 				file_make.chooser()
 
-	def delete_file(filename):
-		print("Are you sure you want to remove:", filename, "?")
-		choice = input()
-		if (choice == 'y'):
-			os.remove(filename)
-			print("file, "+filename+" removed.")
-			sleep(1)
-		elif (choice == 'n'):
+	def delete_file():
+		print("Files in current directory:\n")
+		
+		val = file_make.show_files()
+		
+		if val == 1:
+			system('clear')
+			print("\n No files in current directory.\n")
+			sleep(4)
 			file_make.chooser()
 		else:
-			print("Choose either (y/n).")
-			file_make.delete_file(filename)
+
+			filename = input("\nEnter file name (including extension) to delete.\nExample: file_996.txt\n\nFile name: ")
+			print("\nAre you sure you want to remove: "+filename+"?")
+			choice = input()
+			if (choice == 'y'):
+				try:
+					os.remove(filename)
+					print("file, "+filename+" removed.")
+					sleep(.3)
+				except:
+					system('clear')
+					print("!! File deletion error. Try again (may have misspelled file name.)\n")
+					file_make.delete_file()
+			elif (choice == 'n'):
+				file_make.chooser()
+			else:
+				print("Choose either (y/n).")
+				file_make.delete_file(filename)
 
 	def create_file_name():
 		system('clear')
@@ -79,12 +95,25 @@ class file_make:
 			file_make.create_file_name()
 		return file_name
 
+	def create_new_question():
+		choice = input("Want to create a new file? ")
+		if (choice == 'y'):
+			file_make.create_new_file()
+		elif (choice == 'n'):
+			file_make.chooser()
+		else:
+			print("Please enter either (y/n)")
+			file_make.create_new_question()
+
 	def show_files_edit():
 		system('clear')
 		print("Available files:\n")
 		
 		files_to_edit = file_make.show_files()
-		choice = input("\nPick a file number: ")
+		if (files_to_edit) == 1:
+			file_make.create_new_question()
+		else:
+			choice = input("\nPick a file number: ")
 		
 		for index, filename in files_to_edit.items():
 			if (int(choice) == index):
@@ -101,7 +130,7 @@ class file_make:
 			print(file.read(), end='')
 			file.close()
 			file = open(filename, "a+")
-			file_make.add_content(file)
+			file_make.add_content(file, filename)
 			file.close()
 		elif (answer == 'n'):
 			file_make.chooser()
@@ -130,7 +159,11 @@ class file_make:
 			print("Enter either (y/n)")
 			file_make.view_timer()
 	
-	def add_content(file):
+	def add_content(file, filename):
+		print(datetime.datetime.now(), "\n")
+		file.write(str(datetime.datetime.now())+"\n\n")
+
+		print("Editing "+filename+" ...\n")
 		while (1):
 			content = input()
 			file.write(content + "\n")
@@ -140,7 +173,7 @@ class file_make:
 		filename = file_make.create_file_name()
 		
 		if (not filename):
-			print("Error creating file. Exiting program...")
+			print("Error creating file. Exiting program...\n")
 			sleep(2)
 			quit()
 		
@@ -154,14 +187,14 @@ class file_make:
 			file_make.view_file(filename)
 			file = file_make.edit_file(filename)
 
-		file_make.add_content(file)
+		file_make.add_content(file, filename)
 		file.close()
 
 		print("\nFile: '", filename, "' created.")
 		sleep(1)
 
 	def show_files():
-		i = 1
+		i = 0
 		all_files = {}
 		files = [f for f in os.listdir('.') if os.path.isfile(f)]
 		for f in files:
@@ -171,6 +204,8 @@ class file_make:
 				print(str(i)+'.', f)
 				all_files[i] = f
 				i += 1
+		if (not i):
+			return 1
 		return all_files
 
 file_make.chooser()
