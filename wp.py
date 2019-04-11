@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
+
 import random
 import os
 from os import system
@@ -52,9 +53,9 @@ class file_make:
 
 	def delete_file():
 		print("Files in current directory:\n")
-		
+
 		val = file_make.show_files()
-		
+
 		if val == 1:
 			system('clear')
 			print("\n No files in current directory.\n")
@@ -82,18 +83,19 @@ class file_make:
 
 	def create_file_name():
 		system('clear')
-		
+
 		choice = input("Name file? ")
 
 		y = ['y', 'Y', 'Yes', 'YES', 'yes']
 		n = ['n', 'N', 'No', 'NO', 'no']
 
 		if choice in y:
-			file_name = input("File Name: ") + ".txt"
+			file_name = input("File Name: ")
 		elif choice in n:
 			file_name = "file_" + str(random.randint(1, 1001)) + ".txt"
 		else:
 			print("Either (y/n)")
+			sleep(.3)
 			file_make.create_file_name()
 		return file_name
 
@@ -112,28 +114,28 @@ class file_make:
 		if (not flag):
 			print("Available files:\n")
 			files_to_edit = file_make.show_files()
-			
+
 			if (files_to_edit == 1):
 				system('clear')
 				print("\n No files in current directory.\n")
 				file_make.create_new_question()
 			else:
 				choice = input("\nPick a file number: ")
-			
+
 			for index, filename in files_to_edit.items():
 				if (int(choice) == index):
 					file_make.view_file(filename)
 		else:
 			print("Available files:\n")
 			files_to_edit = file_make.show_files()
-			
+
 			if (files_to_edit == 1):
 				system('clear')
 				print("\n No files in current directory.\n")
 				file_make.create_new_question()
 			else:
 				choice = input("\nPick a file number: ")
-			
+
 			for index, filename in files_to_edit.items():
 				if (int(choice) == index):
 					file_make.edit_file(filename, 0)
@@ -164,7 +166,7 @@ class file_make:
 		print(file.read(), "\n\n")
 		file.close()
 		file_make.view_timer(filename)
-		
+
 	def view_timer(filename):
 		print("Done viewing?")
 		choice = input()
@@ -176,7 +178,7 @@ class file_make:
 		else:
 			print("Enter either (y/n)")
 			file_make.view_timer(filename)
-	
+
 	def add_content(file, filename, flag):
 
 		if (not flag):
@@ -204,19 +206,19 @@ class file_make:
 				file.write(content + "\n")
 
 	def create_new_file():
-		
+
 		filename = file_make.create_file_name()
-		
+
 		if (not filename):
 			print("Error creating file. Exiting program...\n")
 			sleep(2)
 			quit()
-		
+
 		my_file = Path("./"+filename)
 		if (not my_file.is_file()):
 			print("Creating new file...\n")
 			file = open(filename, "w+")
-			file.write(str(datetime.datetime.now())+"\n\n")
+			file.write('# '+str(datetime.datetime.now())+"\n\n")
 			sleep(1)
 			system('clear')
 		else:
@@ -234,16 +236,11 @@ class file_make:
 		all_files = {}
 		files = [f for f in os.listdir('.') if os.path.isfile(f)]
 		for f in files:
-			if ".txt" not in f:
-				continue
-			else:
-				print(str(i)+'.', f)
-				all_files[i] = f
-				i += 1
+			print(str(i)+'.', f)
+			all_files[i] = f
+			i += 1
 		if (not i):
 			return 1
 		return all_files
 
 file_make.chooser()
-
-	
