@@ -6,6 +6,7 @@ from os import system
 from time import sleep
 from pathlib import Path
 import datetime
+import findType
 
 class file_make:
 	def __init__(self):
@@ -83,20 +84,9 @@ class file_make:
 
 	def create_file_name():
 		system('clear')
-
-		choice = input("Name file? ")
-
-		y = ['y', 'Y', 'Yes', 'YES', 'yes']
-		n = ['n', 'N', 'No', 'NO', 'no']
-
-		if choice in y:
-			file_name = input("File Name: ")
-		elif choice in n:
+		file_name = input("File Name: ")
+		if not file_name or file_name == " ":
 			file_name = "file_" + str(random.randint(1, 1001)) + ".txt"
-		else:
-			print("Either (y/n)")
-			sleep(.3)
-			file_make.create_file_name()
 		return file_name
 
 	def create_new_question():
@@ -183,6 +173,7 @@ class file_make:
 
 		if (not flag):
 			print("Editing "+filename+" ...\n")
+			print("**To save file, type ':save:' on a new line.**\n")
 		else:
 			print("Editing "+filename+" ...\n")
 			print(file.read(), end='')
@@ -216,15 +207,18 @@ class file_make:
 
 		my_file = Path("./"+filename)
 		if (not my_file.is_file()):
-			print("Creating new file...\n")
 			file = open(filename, "w+")
-			file.write('# '+str(datetime.datetime.now())+"\n\n")
+			# Check to see if file was named or not e.g., if it's a program or text file
+			if not "file_" in filename:
+				comment = findType.checkType(filename)
+			else:
+				comment = ""
+			file.write(comment+str(datetime.datetime.now())+"\n\n")
 			sleep(1)
 			system('clear')
 		else:
 			file_make.view_file(filename)
 			file = file_make.edit_file(filename, 1)
-
 		print(datetime.datetime.now(), "\n")
 		file_make.add_content(file, filename, 0)
 
