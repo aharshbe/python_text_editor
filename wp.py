@@ -7,12 +7,13 @@ from time import sleep
 from pathlib import Path
 import datetime
 import findType
+import sys
 
 class file_make:
 	def __init__(self):
 		pass
 
-	def chooser():
+	def chooser(flag):
 		while(1):
 			system('clear')
 			print("\nWelcome to File Maker built in Python")
@@ -25,26 +26,29 @@ class file_make:
 			print("6. Compile/Run file")
 			print("")
 			print("q. Type 'q' to quit.\n")
-			choice = input()
+			if (not flag):
+				choice = input()
+			else:
+				choice = flag
 
-			if (choice == str(1)):
+			if (choice == str(1) or choice == 'create'):
 				file_make.create_new_file() # Create new file
-			elif (choice == str(2)):
+			elif (choice == str(2) or choice == 'view'):
 				system('clear')
 				file_make.show_files_edit(0) # View files
 				sleep(.3)
-			elif (choice == str(3)):
+			elif (choice == str(3) or choice == 'delete'):
 				system('clear')
 				file_make.delete_file(0) # Delete a file
 				sleep(2)
-			elif (choice == str(4)):
+			elif (choice == str(4) or choice == 'mv'):
 				print("\nRe-naming a file...") # Raname a file
 				sleep(2)
-			elif (choice == str(5)):
+			elif (choice == str(5) or choice == 'edit'):
 				system('clear')
 				file_make.show_files_edit(1)  # Edit a file
 
-			elif (choice == str(6)):
+			elif (choice == str(6) or choice == 'run'):
 				system('clear')
 				file_make.compile_files(0)  # Compile/Run file
 
@@ -53,14 +57,14 @@ class file_make:
 				quit()
 			else:
 				print("Choose an option above.")
-				file_make.chooser()
+				file_make.chooser(0)
 
 	def delete_file(filename):
 		if filename:
 			os.remove(filename)
 			print("file, "+filename+" removed.")
 			sleep(.2)
-			file_make.chooser()
+			file_make.chooser(0)
 
 		print("Files in current directory:\n")
 
@@ -70,7 +74,7 @@ class file_make:
 			system('clear')
 			print("\n No files in current directory.\n")
 			sleep(4)
-			file_make.chooser()
+			file_make.chooser(0)
 		else:
 			filename = input("\nEnter file name (including extension) to delete.\nExample 1 (single): file_996.txt\nExample 2 (multiple): hello.c hello hello.sh file_2.txt\n\nFile name: ")
 			files = filename.split(" ")
@@ -86,13 +90,13 @@ class file_make:
 						print("file, "+i+" removed.")
 						sleep(.1)
 					sleep(.3)
-					
+
 				except:
 					system('clear')
 					print("!! File deletion error. Try again (may have misspelled file name.)\n")
 					file_make.delete_file(0)
 			elif (choice == 'n'):
-				file_make.chooser()
+				file_make.chooser(0)
 			else:
 				print("Choose either (y/n).")
 				file_make.delete_file(filename)
@@ -109,7 +113,7 @@ class file_make:
 		if (choice == 'y'):
 			file_make.create_new_file()
 		elif (choice == 'n'):
-			file_make.chooser()
+			file_make.chooser(0)
 		else:
 			print("Please enter either (y/n)")
 			file_make.create_new_question()
@@ -157,7 +161,7 @@ class file_make:
 			system('clear')
 			file_make.add_content(file, filename, 1)
 		elif (answer == 'n'):
-			file_make.chooser()
+			file_make.chooser(0)
 		else:
 			print("Please enter either (y/n)")
 			file_make.edit_file(filename, 1)
@@ -199,7 +203,7 @@ class file_make:
 			if (content == ":s:"):
 				print("\nsaving...")
 				file.close()
-				file_make.chooser()
+				file_make.chooser(0)
 				break
 			elif (content == ":sv:"):
 				print("\nsaving and viewing...")
@@ -258,7 +262,7 @@ class file_make:
 	def compile_files(filename):
 		if filename:
 			findType.compileType(filename)
-			file_make.chooser()
+			file_make.chooser(0)
 		print("Files in current directory:\n")
 
 		val = file_make.show_files()
@@ -267,7 +271,7 @@ class file_make:
 			system('clear')
 			print("\n No files in current directory.\n")
 			sleep(4)
-			file_make.chooser()
+			file_make.chooser(0)
 		else:
 			filename = input("\nEnter file name (including extension) to execute.\nExample: file_996.txt\n\nFile name: ")
 			tr = file_make.isFile(filename, val)
@@ -278,7 +282,7 @@ class file_make:
 			except:
 				print("!! File compile error. Try again (may have misspelled file name.)\n")
 				file_make.compile_files(0)
-			file_make.chooser()
+			file_make.chooser(0)
 
 	def isFile(filename, files):
 		if (type(filename) == str):
@@ -298,4 +302,7 @@ class file_make:
 				val = 1
 		return val
 
-file_make.chooser()
+if len(sys.argv) > 1:
+	file_make.chooser(sys.argv[1])
+else:
+	file_make.chooser(0)
