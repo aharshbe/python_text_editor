@@ -86,7 +86,7 @@ class file_make:
 						print("file, "+i+" removed.")
 						sleep(.1)
 					sleep(.3)
-					file_make.chooser()
+					
 				except:
 					system('clear')
 					print("!! File deletion error. Try again (may have misspelled file name.)\n")

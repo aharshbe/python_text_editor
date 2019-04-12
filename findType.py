@@ -12,6 +12,8 @@ def checkType(filename):
     elif ".c" in filename:
         print("Creating C file...")
         return '// '
+    elif ".gitignore" in filename:
+        return '# '
     else:
         return ''
 
@@ -20,6 +22,7 @@ def compileType(filename):
         print("Running Python file...")
         sleep(.2)
         exec(open(filename).read())
+        print("<< END OF FILE >>")
         options = ['Y', 'y', 'n','N']
         while (1):
             choice = input("Done viewing? (y/n): ")
@@ -35,6 +38,7 @@ def compileType(filename):
         e = "chmod u+x ./{}".format(filename)
         call(e, shell=True)
         call(s, shell=True)
+        print("<< END OF FILE >>")
         options = ['Y', 'y', 'n','N']
         while (1):
             choice = input("Done viewing? (y/n): ")
@@ -51,6 +55,7 @@ def compileType(filename):
         e = "gcc ./{} -o {}".format(filename, output)
         call(e, shell=True)
         call(s, shell=True)
+        print("<< END OF FILE >>")
         options = ['Y', 'y', 'n','N']
         while (1):
             choice = input("Done viewing? (y/n): ")
