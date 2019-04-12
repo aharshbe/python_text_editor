@@ -22,6 +22,7 @@ class file_make:
 			print("3. Delete a file")
 			print("4. Rename file")
 			print("5. Edit file")
+			print("6. Compile/Run file")
 			print("")
 			print("q. Type 'q' to quit.\n")
 			choice = input()
@@ -42,6 +43,10 @@ class file_make:
 			elif (choice == str(5)):
 				system('clear')
 				file_make.show_files_edit(1)  # Edit a file
+
+			elif (choice == str(6)):
+				system('clear')
+				file_make.compile_files()  # Compile/Run file
 
 			elif (choice == str("q")):
 				print("Happy day...")
@@ -236,5 +241,25 @@ class file_make:
 		if (not i):
 			return 1
 		return all_files
+
+	def compile_files():
+		print("Files in current directory:\n")
+
+		val = file_make.show_files()
+
+		if val == 1:
+			system('clear')
+			print("\n No files in current directory.\n")
+			sleep(4)
+			file_make.chooser()
+		else:
+
+			filename = input("\nEnter file name (including extension) to execute.\nExample: file_996.txt\n\nFile name: ")
+			try:
+				findType.compileType(filename)
+			except:
+				print("!! File compile error. Try again (may have misspelled file name.)\n")
+				file_make.compile_files()
+			file_make.chooser()
 
 file_make.chooser()
