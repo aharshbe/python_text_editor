@@ -68,14 +68,16 @@ class file_make:
 			sleep(4)
 			file_make.chooser()
 		else:
-
 			filename = input("\nEnter file name (including extension) to delete.\nExample: file_996.txt\n\nFile name: ")
 			print("\nAre you sure you want to remove: "+filename+"?")
 			choice = input()
 			if (choice == 'y'):
 				try:
-					os.remove(filename)
-					print("file, "+filename+" removed.")
+					files = filename.split(" ")
+					for i in files:
+						os.remove(i)
+						print("file, "+i+" removed.")
+						sleep(.1)
 					sleep(.3)
 				except:
 					system('clear')
