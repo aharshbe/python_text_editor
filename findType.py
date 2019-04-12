@@ -6,12 +6,14 @@ def checkType(filename):
     if ".py" in filename:
         print("Creating Python file...")
         return '# '
-    if ".sh" in filename:
+    elif ".sh" in filename:
         print("Creating Bash file...")
         return '# '
-    if ".c" in filename:
+    elif ".c" in filename:
         print("Creating C file...")
         return '// '
+    else:
+        return ''
 
 def compileType(filename):
     if ".py" in filename:
@@ -26,7 +28,7 @@ def compileType(filename):
                     break
                 else:
                     continue
-    if ".sh" in filename:
+    elif ".sh" in filename:
         print("Running Bash file...")
         sleep(.2)
         s = "./{}".format(filename)
@@ -41,7 +43,7 @@ def compileType(filename):
                     break
                 else:
                     continue
-    if ".c" in filename:
+    elif ".c" in filename:
         print("Compiling C file...")
         sleep(.2)
         output = filename.split('.')[0]
@@ -57,3 +59,5 @@ def compileType(filename):
                     break
                 else:
                     continue
+    else:
+        print("Not sure of this file extension and so can't run it.")

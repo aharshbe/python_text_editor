@@ -46,7 +46,7 @@ class file_make:
 
 			elif (choice == str(6)):
 				system('clear')
-				file_make.compile_files()  # Compile/Run file
+				file_make.compile_files(0)  # Compile/Run file
 
 			elif (choice == str("q")):
 				system('clear')
@@ -73,16 +73,20 @@ class file_make:
 			file_make.chooser()
 		else:
 			filename = input("\nEnter file name (including extension) to delete.\nExample 1 (single): file_996.txt\nExample 2 (multiple): hello.c hello hello.sh file_2.txt\n\nFile name: ")
+			files = filename.split(" ")
+			tr = file_make.isFile(files, val)
+			if (tr):
+				file_make.delete_file(0)
 			print("\nAre you sure you want to remove: "+filename+"?")
 			choice = input()
 			if (choice == 'y'):
 				try:
-					files = filename.split(" ")
 					for i in files:
 						os.remove(i)
 						print("file, "+i+" removed.")
 						sleep(.1)
 					sleep(.3)
+					file_make.chooser()
 				except:
 					system('clear')
 					print("!! File deletion error. Try again (may have misspelled file name.)\n")
@@ -226,10 +230,7 @@ class file_make:
 		if (not my_file.is_file()):
 			file = open(filename, "w+")
 			# Check to see if file was named or not e.g., if it's a program or text file
-			if not "file_" in filename:
-				comment = findType.checkType(filename)
-			else:
-				comment = ""
+			comment = findType.checkType(filename)
 			file.write(comment+str(datetime.datetime.now())+"\n\n")
 			sleep(.5)
 			system('clear')
@@ -269,11 +270,32 @@ class file_make:
 			file_make.chooser()
 		else:
 			filename = input("\nEnter file name (including extension) to execute.\nExample: file_996.txt\n\nFile name: ")
+			tr = file_make.isFile(filename, val)
+			if (tr):
+				file_make.compile_files(0)
 			try:
 				findType.compileType(filename)
 			except:
 				print("!! File compile error. Try again (may have misspelled file name.)\n")
-				file_make.compile_files()
+				file_make.compile_files(0)
 			file_make.chooser()
+
+	def isFile(filename, files):
+		if (type(filename) == str):
+			if (filename not in files.values()):
+				print("Make sure to type the name of a file that exists. Try again.")
+				sleep(2)
+				system('clear')
+				return 1
+			else:
+				return 0
+		val = 0
+		for i in filename:
+			if (i not in files.values()):
+				print("Make sure to type the name of a file that exists. Try again.")
+				sleep(2)
+				system('clear')
+				val = 1
+		return val
 
 file_make.chooser()
