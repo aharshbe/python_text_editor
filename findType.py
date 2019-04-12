@@ -5,16 +5,12 @@ from subprocess import call
 def checkType(filename):
     if ".py" in filename:
         print("Creating Python file...")
-        sleep(.2)
         return '# '
     if ".sh" in filename:
         print("Creating Bash file...")
-        sleep(.2)
-        print("bash")
         return '# '
     if ".c" in filename:
         print("Creating C file...")
-        sleep(.2)
         return '// '
 
 def compileType(filename):
