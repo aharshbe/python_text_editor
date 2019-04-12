@@ -19,7 +19,7 @@ class file_make:
 			print("\nWhat would you like to do?")
 			print("1. Create a new file")
 			print("2. View files")
-			print("3. Delete a file")
+			print("3. Delete a file or files")
 			print("4. Rename file")
 			print("5. Edit file")
 			print("6. Compile/Run file")
@@ -35,7 +35,7 @@ class file_make:
 				sleep(.3)
 			elif (choice == str(3)):
 				system('clear')
-				file_make.delete_file() # Delete a file
+				file_make.delete_file(0) # Delete a file
 				sleep(2)
 			elif (choice == str(4)):
 				print("\nRe-naming a file...") # Raname a file
@@ -49,15 +49,19 @@ class file_make:
 				file_make.compile_files()  # Compile/Run file
 
 			elif (choice == str("q")):
-				print("Happy day...")
-				sleep(.3)
 				system('clear')
 				quit()
 			else:
 				print("Choose an option above.")
 				file_make.chooser()
 
-	def delete_file():
+	def delete_file(filename):
+		if filename:
+			os.remove(filename)
+			print("file, "+filename+" removed.")
+			sleep(.2)
+			file_make.chooser()
+
 		print("Files in current directory:\n")
 
 		val = file_make.show_files()
@@ -68,7 +72,7 @@ class file_make:
 			sleep(4)
 			file_make.chooser()
 		else:
-			filename = input("\nEnter file name (including extension) to delete.\nExample: file_996.txt\n\nFile name: ")
+			filename = input("\nEnter file name (including extension) to delete.\nExample 1 (single): file_996.txt\nExample 2 (multiple): hello.c hello hello.sh file_2.txt\n\nFile name: ")
 			print("\nAre you sure you want to remove: "+filename+"?")
 			choice = input()
 			if (choice == 'y'):
@@ -82,7 +86,7 @@ class file_make:
 				except:
 					system('clear')
 					print("!! File deletion error. Try again (may have misspelled file name.)\n")
-					file_make.delete_file()
+					file_make.delete_file(0)
 			elif (choice == 'n'):
 				file_make.chooser()
 			else:
@@ -160,12 +164,12 @@ class file_make:
 		print("Opening file `", filename, "`...")
 		file = open(filename, "r")
 		system('clear')
-		print(file.read(), "\n\n")
+		print(file.read(), "\n<END OF FILE>")
 		file.close()
 		file_make.view_timer(filename)
 
 	def view_timer(filename):
-		print("Done viewing?")
+		print("Done viewing? (y/n)")
 		choice = input()
 		if (choice == 'y'):
 			return
@@ -188,17 +192,23 @@ class file_make:
 			file = open(filename, "a+")
 		while (1):
 			content = input()
-			if (content == ":save:"):
+			if (content == ":s:"):
 				print("\nsaving...")
-				sleep(.2)
 				file.close()
 				file_make.chooser()
 				break
-			elif (content == ":save+view:"):
+			elif (content == ":sv:"):
 				print("\nsaving and viewing...")
-				sleep(.2)
 				file.close()
 				file_make.view_file(filename)
+				break
+			elif (content == ":sc:"):
+				print("\nsaving and running...")
+				file.close()
+				file_make.compile_files(filename)
+				break
+			elif (content == ":d:"):
+				file_make.delete_file(filename)
 				break
 			else:
 				file.write(content + "\n")
@@ -221,7 +231,7 @@ class file_make:
 			else:
 				comment = ""
 			file.write(comment+str(datetime.datetime.now())+"\n\n")
-			sleep(1)
+			sleep(.5)
 			system('clear')
 		else:
 			file_make.view_file(filename)
@@ -244,7 +254,10 @@ class file_make:
 			return 1
 		return all_files
 
-	def compile_files():
+	def compile_files(filename):
+		if filename:
+			findType.compileType(filename)
+			file_make.chooser()
 		print("Files in current directory:\n")
 
 		val = file_make.show_files()
@@ -255,7 +268,6 @@ class file_make:
 			sleep(4)
 			file_make.chooser()
 		else:
-
 			filename = input("\nEnter file name (including extension) to execute.\nExample: file_996.txt\n\nFile name: ")
 			try:
 				findType.compileType(filename)
